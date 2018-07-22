@@ -7,12 +7,11 @@ export default class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            time: 3000, // default time change later
+            time: 1000, // default time change later
             scorePC: 0,
             scorePL: 0,
             targetCells: [],
             cellsStatus: Array(100).fill('passive'),
-            startGame: true,
             gameStatus: 'paused'
         };
     }
@@ -35,7 +34,42 @@ export default class Game extends Component {
         console.log(id);
     }
 
-    updateCells() {
+    startGame = () => {
+        console.log('start?');
+        if(!isNaN(this.state.time)) 
+            this.setState({
+                gameStatus: 'started', 
+                scorePL: 0,
+                scorePC: 0,
+                cellsStatus: Array(100).fill('passive'),
+                targetCells: []
+            },()=> {
+                console.log('after start');
+                console.log(this.state);
+                this.timer = setInterval(() => {
+                    this.updateCells()
+                    }, this.state.time
+                );
+            });
+    }
+
+    onChange = (e) => {
+        let time = e.target.value;
+        this.setState((prevState) => {
+            clearInterval(this.timer);
+            return { 
+                gameStatus:'paused',
+                scorePL: 0,
+                scorePC: 0,
+                cellsStatus: Array(100).fill('passive'),
+                targetCells: [],
+                time 
+            }
+        }, 
+        () => {console.log('time state: '+this.state.time)})
+    }
+
+    checkCells() {
         let lastTarget = this.state.targetCells.length-1;
         if(this.state.cellsStatus[this.state.targetCells[lastTarget]] !== 'caught' && lastTarget >= 0) {
             this.setState((prevState) => {
@@ -47,6 +81,9 @@ export default class Game extends Component {
                 };
             }, () => {console.log(this.state)})
         }
+    }
+
+    getNewTargetCell() {
         this.setState((prevState) => {
             let targetCells = this.state.targetCells.slice();
             let cellsStatus = this.state.cellsStatus.slice();
@@ -60,11 +97,25 @@ export default class Game extends Component {
         });
     }
 
-    componentDidMount() {
-        this.timer = setInterval(() => {
-              this.updateCells()
-            }, this.state.time
-        );
+    endGame() {
+        clearInterval(this.timer);
+        this.setState({
+            gameStatus:'paused',
+            scorePL: 0,
+            scorePC: 0,
+            cellsStatus: Array(100).fill('passive'),
+            targetCells: [],
+            time: 1000
+        }, () => {console.log(this.state)})
+    }
+
+    updateCells() {
+        if(this.state.scorePC === 10 || this.state.scorePL === 10) {
+            this.endGame();
+        } else {
+            this.checkCells();
+            this.getNewTargetCell();
+        }
     }
 
     componentWillUnmount() {
@@ -74,6 +125,8 @@ export default class Game extends Component {
     render() {
         return (
             <div>
+                <Input text={this.state.time} onChange={this.onChange} onClick={this.startGame}>
+                </Input>
                 <Board cellsStatus={this.state.cellsStatus} handleClick={this.handleClick}> 
                 </Board> 
             </div>

@@ -1,0 +1,9 @@
+.inputRow {
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.inputRow>input {
+    margin-right: 5px;
+}
