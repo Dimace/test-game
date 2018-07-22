@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Board from '../board/Board.js';
 import Input from '../input/Input.js';
+import Score from '../score/Score.js';
 
 // controller component
 export default class Game extends Component {
@@ -100,9 +101,7 @@ export default class Game extends Component {
     endGame() {
         clearInterval(this.timer);
         this.setState({
-            gameStatus:'paused',
-            scorePL: 0,
-            scorePC: 0,
+            gameStatus:'gameover',
             cellsStatus: Array(100).fill('passive'),
             targetCells: [],
             time: 1000
@@ -122,9 +121,24 @@ export default class Game extends Component {
         clearInterval(this.timer);
     }
 
+    onClose = () => {
+        this.setState({
+            gameStatus: 'paused',
+            scorePL: 0,
+            scorePC: 0
+        });
+    }
+
     render() {
+        const { scorePC, scorePL } = this.state; 
+        let victoryText = 'Game over';
+        if(this.state.scorePL === 10)
+            victoryText = 'You have won!';
         return (
             <div>
+                {this.state.gameStatus === 'gameover' && 
+                <Score victoryText = {victoryText} scorePC={scorePC} scorePL={scorePL} onClose={this.onClose}>
+                </Score>}
                 <Input text={this.state.time} onChange={this.onChange} onClick={this.startGame}>
                 </Input>
                 <Board cellsStatus={this.state.cellsStatus} handleClick={this.handleClick}> 
