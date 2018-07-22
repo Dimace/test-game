@@ -1,0 +1,22 @@
+.cell {
+    border: 2px solid black;
+    width: 40px;
+    height: 40px;
+    background-color:blue;
+}
+
+.yellow {
+    background-color:yellow;
+}
+
+.red {
+    background-color:red;
+}
+
+.green {
+    background-color:green;
+}
+
+.error {
+    background-color: orange;
+}
