@@ -19,7 +19,6 @@ export default class Game extends Component {
 
     handleClick = (id) => (e) => {
         if(this.state.targetCells[this.state.targetCells.length-1] === id) {
-            console.log('++');
             this.setState((prevState) => {
                 let cellsStatus = prevState.cellsStatus.slice();
                 cellsStatus[id] = 'caught';
@@ -27,16 +26,11 @@ export default class Game extends Component {
                     scorePL: prevState.scorePL+1,
                     cellsStatus
                 };
-            }, () => {console.log(this.state)})
+            })
         }
-        console.log('handle click:');
-        console.log(this.state.targetCells[this.state.targetCells.length-1]);
-        console.log('target');
-        console.log(id);
     }
 
     startGame = () => {
-        console.log('start?');
         if(!isNaN(this.state.time)) 
             this.setState({
                 gameStatus: 'started', 
@@ -45,8 +39,6 @@ export default class Game extends Component {
                 cellsStatus: Array(100).fill('passive'),
                 targetCells: []
             },()=> {
-                console.log('after start');
-                console.log(this.state);
                 this.timer = setInterval(() => {
                     this.updateCells()
                     }, this.state.time
@@ -66,8 +58,7 @@ export default class Game extends Component {
                 targetCells: [],
                 time 
             }
-        }, 
-        () => {console.log('time state: '+this.state.time)})
+        })
     }
 
     checkCells() {
@@ -80,7 +71,7 @@ export default class Game extends Component {
                     scorePC: prevState.scorePC+1,
                     cellsStatus
                 };
-            }, () => {console.log(this.state)})
+            })
         }
     }
 
@@ -105,7 +96,7 @@ export default class Game extends Component {
             cellsStatus: Array(100).fill('passive'),
             targetCells: [],
             time: 1000
-        }, () => {console.log(this.state)})
+        })
     }
 
     updateCells() {
