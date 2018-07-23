@@ -8,7 +8,7 @@ export default class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            time: 1000, // default time change later
+            time: 1000, 
             scorePC: 0,
             scorePL: 0,
             targetCells: [],
@@ -18,7 +18,7 @@ export default class Game extends Component {
     }
 
     handleClick = (id) => (e) => {
-        if(this.state.targetCells[this.state.targetCells.length-1] === id) {
+        if(this.state.targetCells[this.state.targetCells.length-1] === id && this.state.cellsStatus[id] === 'active') {
             this.setState((prevState) => {
                 let cellsStatus = prevState.cellsStatus.slice();
                 cellsStatus[id] = 'caught';
@@ -26,7 +26,7 @@ export default class Game extends Component {
                     scorePL: prevState.scorePL+1,
                     cellsStatus
                 };
-            })
+            });
         }
     }
 
@@ -76,10 +76,10 @@ export default class Game extends Component {
     }
 
     getNewTargetCell() {
+        let randomCell = 0;
         this.setState((prevState) => {
             let targetCells = this.state.targetCells.slice();
             let cellsStatus = this.state.cellsStatus.slice();
-            let randomCell = 0;
             do {
                 randomCell = Math.floor(Math.random() * 99);
             } while(targetCells.includes(randomCell));
